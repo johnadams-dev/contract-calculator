@@ -1512,8 +1512,11 @@ Extract only the NUMBER of days (not dates) for the "days" fields.`;
             
             const propertyId = document.getElementById('resultPropertyId').textContent;
             const confirm = window.confirm(
-                `Add ${calculatedDates.length} calendar events for:\n\n${propertyId}\n\n` +
+                'Add ' + calculatedDates.length + ' calendar events for:\n\n' + propertyId + '\n\n' +
                 'Events will be created as all-day events marked as "free time".\n\n' +
+                '⚠️ IMPORTANT: Allow popups when prompted!\n' +
+                'Your browser may block the authorization window.\n' +
+                'Look for a popup blocked icon in the address bar.\n\n' +
                 'Click OK to proceed with Google Calendar authorization.'
             );
             
@@ -1579,7 +1582,7 @@ Extract only the NUMBER of days (not dates) for the "days" fields.`;
                       (failCount > 0 ? `⚠️ ${failCount} event(s) failed to create.` : '') +
                       '\n\nCheck your calendar for the new events.');
             } else {
-                alert('❌ Failed to create calendar events. Please try again.');
+                alert('❌ Failed to create calendar events. Make sure your browser didn't block the login window. Please try again.');
             }
         }
     </script>
