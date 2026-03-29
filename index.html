@@ -4,9 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Contract Date Calculator - AI Enhanced | Adams, Cameron & Co.</title>
-    <link rel="icon" type="image/png" sizes="32x32" href="favicon.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="favicon.png">
-    <link rel="apple-touch-icon" sizes="180x180" href="favicon.png">
+    <link rel="icon" type="image/png" href="favicon.png">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://apis.google.com/js/api.js"></script>
     
@@ -39,8 +37,8 @@
             // 2. Create OAuth 2.0 Client ID (Web application)
             // 3. Add authorized JavaScript origins: your website URL
             // 4. Copy Client ID here
-            calendarClientId: '113661094773-9k0e8b6nju9f4nn0h0lmgcuvqag7o4dv.apps.googleusercontent.com',
-            calendarEnabled: true,  // Set to true after adding Client ID
+            calendarClientId: 'YOUR_OAUTH_CLIENT_ID_HERE.apps.googleusercontent.com',
+            calendarEnabled: false,  // Set to true after adding Client ID
         };
     </script>
 </head>
@@ -1402,9 +1400,15 @@ Extract only the NUMBER of days (not dates) for the "days" fields.`;
             });
             text += '═══════════════════════════════════════════════\n';
             text += '© Adams, Cameron & Co. 2026\n';
+            
+            // Try modern clipboard API first
             if (navigator.clipboard && navigator.clipboard.writeText) {
-                navigator.clipboard.writeText(text).then(() => alert('✓ Dates copied to clipboard!'))
-                    .catch(err => fallbackCopyToClipboard(text));
+                navigator.clipboard.writeText(text)
+                    .then(() => showNotification('✓ Dates copied to clipboard!', 'success'))
+                    .catch(err => {
+                        console.log('Clipboard API failed, trying fallback');
+                        fallbackCopyToClipboard(text);
+                    });
             } else {
                 fallbackCopyToClipboard(text);
             }
@@ -1419,12 +1423,59 @@ Extract only the NUMBER of days (not dates) for the "days" fields.`;
             textArea.select();
             try {
                 document.execCommand('copy');
-                alert('✓ Dates copied to clipboard!');
+                showNotification('✓ Dates copied to clipboard!', 'success');
             } catch (err) {
-                alert('Unable to copy to clipboard');
+                console.error('Copy failed:', err);
+                showNotification('Unable to copy. Press Ctrl+C to copy manually.', 'error');
             }
             document.body.removeChild(textArea);
         }
+        
+        // Visual notification system (replaces alert in sandboxed environments)
+        function showNotification(message, type = 'info') {
+            // Remove any existing notifications
+            const existing = document.querySelector('.notification-toast');
+            if (existing) existing.remove();
+            
+            const notification = document.createElement('div');
+            notification.className = `notification-toast notification-${type}`;
+            notification.textContent = message;
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: ${type === 'success' ? '#28a745' : type === 'error' ? '#dc3545' : '#007bff'};
+                color: white;
+                padding: 15px 25px;
+                border-radius: 8px;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+                z-index: 10000;
+                font-size: 14px;
+                max-width: 300px;
+                animation: slideIn 0.3s ease-out;
+            `;
+            
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.style.animation = 'slideOut 0.3s ease-out';
+                setTimeout(() => notification.remove(), 300);
+            }, 3000);
+        }
+        
+        // Add animation styles
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes slideIn {
+                from { transform: translateX(400px); opacity: 0; }
+                to { transform: translateX(0); opacity: 1; }
+            }
+            @keyframes slideOut {
+                from { transform: translateX(0); opacity: 1; }
+                to { transform: translateX(400px); opacity: 0; }
+            }
+        `;
+        document.head.appendChild(style);
         
         // ============================================================
         // GOOGLE CALENDAR INTEGRATION
@@ -1549,7 +1600,7 @@ Extract only the NUMBER of days (not dates) for the "days" fields.`;
                     const dateStr = item.date.toISOString().split('T')[0];
                     
                     const event = {
-                        summary: `${propertyId} - ${item.label}`,
+                        summary: propertyId + ' - ' + item.label,
                         description: description,
                         start: {
                             date: dateStr,
@@ -1581,13 +1632,14 @@ Extract only the NUMBER of days (not dates) for the "days" fields.`;
             }
             
             if (successCount > 0) {
-                alert(`✅ Successfully added ${successCount} event(s) to your Google Calendar!\n\n` +
-                      (failCount > 0 ? `⚠️ ${failCount} event(s) failed to create.` : '') +
+                alert('✅ Successfully added ' + successCount + ' event(s) to your Google Calendar!\n\n' +
+                      (failCount > 0 ? '⚠️ ' + failCount + ' event(s) failed to create.' : '') +
                       '\n\nCheck your calendar for the new events.');
             } else {
-                alert('❌ Failed to create calendar events. Make sure your browser didn't block the login window. Please try again.');
+                alert('❌ Failed to create calendar events. Make sure your pop-up blocker is not on! Please try again.');
             }
         }
     </script>
 </body>
 </html>
+
