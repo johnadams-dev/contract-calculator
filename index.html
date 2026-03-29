@@ -36,8 +36,8 @@
             // 2. Create OAuth 2.0 Client ID (Web application)
             // 3. Add authorized JavaScript origins: your website URL
             // 4. Copy Client ID here
-            calendarClientId: 'YOUR_OAUTH_CLIENT_ID_HERE.apps.googleusercontent.com',
-            calendarEnabled: false,  // Set to true after adding Client ID
+            calendarClientId: '205198562122-ruhu1eemehs3nfgss3d1jdah47m8eadf.apps.googleusercontent.com',
+            calendarEnabled: true,  // Set to true after adding Client ID
         };
     </script>
 </head>
@@ -702,27 +702,29 @@
             const statusDiv = document.getElementById('extractionStatus');
             statusDiv.classList.add('active');
             statusDiv.classList.remove('success', 'error');
-            statusDiv.innerHTML = 
-                '<div class="status-content">' +
-                    '<div class="loading-spinner"></div>' +
-                    '<div class="status-text">' +
-                        '<h4>Processing contract...</h4>' +
-                        '<p>Uploading to Google Drive and extracting with Gemini AI</p>' +
-                    '</div>' +
-                '</div>';
+            statusDiv.innerHTML = `
+                <div class="status-content">
+                    <div class="loading-spinner"></div>
+                    <div class="status-text">
+                        <h4>Processing contract...</h4>
+                        <p>Uploading to Google Drive and extracting with Gemini AI</p>
+                    </div>
+                </div>
+            `;
             
             try {
                 const extractedData = await uploadAndExtractGoogle(file);
                 
                 statusDiv.classList.add('success');
-                statusDiv.innerHTML = 
-                    '<div class="status-content">' +
-                        '<div class="status-icon">✅</div>' +
-                        '<div class="status-text">' +
-                            '<h4>Extraction Complete!</h4>' +
-                            '<p>Form auto-filled. Please review values below.</p>' +
-                        '</div>' +
-                    '</div>';
+                statusDiv.innerHTML = `
+                    <div class="status-content">
+                        <div class="status-icon">✅</div>
+                        <div class="status-text">
+                            <h4>Extraction Complete!</h4>
+                            <p>Form auto-filled. Please review values below.</p>
+                        </div>
+                    </div>
+                `;
                 
                 fillFormWithExtractedData(extractedData);
                 
@@ -735,14 +737,15 @@
                 
             } catch (error) {
                 statusDiv.classList.add('error');
-                statusDiv.innerHTML = 
-                    '<div class="status-content">' +
-                        '<div class="status-icon">❌</div>' +
-                        '<div class="status-text">' +
-                            '<h4>Extraction Failed</h4>' +
-                            '<p>' + error.message + '. Please enter dates manually.</p>' +
-                        '</div>' +
-                    '</div>';
+                statusDiv.innerHTML = `
+                    <div class="status-content">
+                        <div class="status-icon">❌</div>
+                        <div class="status-text">
+                            <h4>Extraction Failed</h4>
+                            <p>${error.message}. Please enter dates manually.</p>
+                        </div>
+                    </div>
+                `;
             }
         }
         
@@ -820,14 +823,15 @@
                 const statusDiv = document.getElementById('extractionStatus');
                 statusDiv.classList.add('active');
                 statusDiv.classList.remove('success', 'error');
-                statusDiv.innerHTML = 
-                    '<div class="status-content">' +
-                        '<div class="loading-spinner"></div>' +
-                        '<div class="status-text">' +
-                            '<h4>Downloading from Drive...</h4>' +
-                            '<p>Getting file and extracting with Google AI</p>' +
-                        '</div>' +
-                    '</div>';
+                statusDiv.innerHTML = `
+                    <div class="status-content">
+                        <div class="loading-spinner"></div>
+                        <div class="status-text">
+                            <h4>Downloading from Drive...</h4>
+                            <p>Getting file and extracting with Google AI</p>
+                        </div>
+                    </div>
+                `;
                 
                 try {
                     // Download file from Drive
@@ -835,26 +839,28 @@
                     const file = new File([blob], fileName, { type: 'application/pdf' });
                     
                     // Process with existing upload function
-                    statusDiv.innerHTML = 
-                        '<div class="status-content">' +
-                            '<div class="loading-spinner"></div>' +
-                            '<div class="status-text">' +
-                                '<h4>Processing contract...</h4>' +
-                                '<p>Google AI is extracting dates and information</p>' +
-                            '</div>' +
-                        '</div>';
+                    statusDiv.innerHTML = `
+                        <div class="status-content">
+                            <div class="loading-spinner"></div>
+                            <div class="status-text">
+                                <h4>Processing contract...</h4>
+                                <p>Google AI is extracting dates and information</p>
+                            </div>
+                        </div>
+                    `;
                     
                     const extractedData = await uploadAndExtractGoogle(file);
                     
                     statusDiv.classList.add('success');
-                    statusDiv.innerHTML = 
-                        '<div class="status-content">' +
-                            '<div class="status-icon">✅</div>' +
-                            '<div class="status-text">' +
-                                '<h4>Extraction Complete!</h4>' +
-                                '<p>Form auto-filled. Please review values below.</p>' +
-                            '</div>' +
-                        '</div>';
+                    statusDiv.innerHTML = `
+                        <div class="status-content">
+                            <div class="status-icon">✅</div>
+                            <div class="status-text">
+                                <h4>Extraction Complete!</h4>
+                                <p>Form auto-filled. Please review values below.</p>
+                            </div>
+                        </div>
+                    `;
                     
                     fillFormWithExtractedData(extractedData);
                     
@@ -867,24 +873,25 @@
                     
                 } catch (error) {
                     statusDiv.classList.add('error');
-                    statusDiv.innerHTML = 
-                        '<div class="status-content">' +
-                            '<div class="status-icon">❌</div>' +
-                            '<div class="status-text">' +
-                                '<h4>Extraction Failed</h4>' +
-                                '<p>' + error.message + '. Please enter dates manually.</p>' +
-                            '</div>' +
-                        '</div>';
+                    statusDiv.innerHTML = `
+                        <div class="status-content">
+                            <div class="status-icon">❌</div>
+                            <div class="status-text">
+                                <h4>Extraction Failed</h4>
+                                <p>${error.message}. Please enter dates manually.</p>
+                            </div>
+                        </div>
+                    `;
                 }
             }
         }
         
         async function downloadFromDrive(fileId) {
             // Download file content from Google Drive
-            const response = await fetch('https://www.googleapis.com/drive/v3/files/' + fileId + '?alt=media&key=' + GOOGLE_CONFIG.apiKey, {
+            const response = await fetch(`https://www.googleapis.com/drive/v3/files/${fileId}?alt=media&key=${GOOGLE_CONFIG.apiKey}`, {
                 method: 'GET',
                 headers: {
-                    'Authorization': oauthToken ? 'Bearer ' + oauthToken : ''
+                    'Authorization': oauthToken ? `Bearer ${oauthToken}` : ''
                 }
             });
             
@@ -954,7 +961,7 @@
             const response = await fetch('https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart', {
                 method: 'POST',
                 headers: {
-                    'Authorization': 'Bearer ' + GOOGLE_CONFIG.apiKey
+                    'Authorization': `Bearer ${GOOGLE_CONFIG.apiKey}`
                 },
                 body: form
             });
@@ -971,25 +978,28 @@
         async function extractWithGemini(base64Pdf) {
             // Use Gemini 2.5 to extract structured data from PDF
             // Native JSON mode ensures clean output without markdown
-            const prompt = 'Extract data from this Florida FAR/BAR Residential Contract PDF.\n\n' +
-'Return a JSON object with these fields:\n\n' +
-'1. propertyAddress: Full address from line 7\n' +
-'2. effectiveDate: Date from line 2 (format: YYYY-MM-DD)\n' +
-'3. closingDate: Date from line 53 (format: YYYY-MM-DD)\n' +
-'4. initialDepositDays: Number of days from line 33, use 3 if blank\n' +
-'5. additionalDepositDays: Number of days from line 36, use 10 if blank, 0 if N/A\n' +
-'6. financingDays: Number of days from line 89, use 30 if blank\n' +
-'7. titleDays: Days before closing from line 155, use 15 if blank\n' +
-'8. floodDays: Number of days from line 225, use 20 if blank\n' +
-'9. inspectionDays: Number of days from line 261, use 15 if blank\n' +
-'10. transactionType: Check Paragraph 8 checkboxes:\n' +
-'    - If line 88 is checked: \'cash\'\n' +
-'    - If line 89 is checked: \'financed\'\n' +
-'    - Default to \'financed\' if unclear\n\n' +
-'Convert all dates to YYYY-MM-DD format.\n' +
-'Extract only the NUMBER of days (not dates) for the "days" fields.';
+            const prompt = `Extract data from this Florida FAR/BAR Residential Contract PDF.
 
-            const response = await fetch('https://generativelanguage.googleapis.com/v1beta/models/' + GOOGLE_CONFIG.geminiModel + ':generateContent?key=' + GOOGLE_CONFIG.geminiApiKey, {
+Return a JSON object with these fields:
+
+1. propertyAddress: Full address from line 7
+2. effectiveDate: Date from line 2 (format: YYYY-MM-DD)
+3. closingDate: Date from line 53 (format: YYYY-MM-DD)
+4. initialDepositDays: Number of days from line 33, use 3 if blank
+5. additionalDepositDays: Number of days from line 36, use 10 if blank, 0 if N/A
+6. financingDays: Number of days from line 89, use 30 if blank
+7. titleDays: Days before closing from line 155, use 15 if blank
+8. floodDays: Number of days from line 225, use 20 if blank
+9. inspectionDays: Number of days from line 261, use 15 if blank
+10. transactionType: Check Paragraph 8 checkboxes:
+    - If line 88 is checked: 'cash'
+    - If line 89 is checked: 'financed'
+    - Default to 'financed' if unclear
+
+Convert all dates to YYYY-MM-DD format.
+Extract only the NUMBER of days (not dates) for the "days" fields.`;
+
+            const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${GOOGLE_CONFIG.geminiModel}:generateContent?key=${GOOGLE_CONFIG.geminiApiKey}`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -1389,15 +1399,9 @@
             });
             text += '═══════════════════════════════════════════════\n';
             text += '© Adams, Cameron & Co. 2026\n';
-            
-            // Try modern clipboard API first
             if (navigator.clipboard && navigator.clipboard.writeText) {
-                navigator.clipboard.writeText(text)
-                    .then(() => showNotification('✓ Dates copied to clipboard!', 'success'))
-                    .catch(err => {
-                        console.log('Clipboard API failed, trying fallback');
-                        fallbackCopyToClipboard(text);
-                    });
+                navigator.clipboard.writeText(text).then(() => alert('✓ Dates copied to clipboard!'))
+                    .catch(err => fallbackCopyToClipboard(text));
             } else {
                 fallbackCopyToClipboard(text);
             }
@@ -1412,59 +1416,12 @@
             textArea.select();
             try {
                 document.execCommand('copy');
-                showNotification('✓ Dates copied to clipboard!', 'success');
+                alert('✓ Dates copied to clipboard!');
             } catch (err) {
-                console.error('Copy failed:', err);
-                showNotification('Unable to copy. Press Ctrl+C to copy manually.', 'error');
+                alert('Unable to copy to clipboard');
             }
             document.body.removeChild(textArea);
         }
-        
-        // Visual notification system (replaces alert in sandboxed environments)
-        function showNotification(message, type = 'info') {
-            // Remove any existing notifications
-            const existing = document.querySelector('.notification-toast');
-            if (existing) existing.remove();
-            
-            const notification = document.createElement('div');
-            notification.className = `notification-toast notification-${type}`;
-            notification.textContent = message;
-            notification.style.cssText = `
-                position: fixed;
-                top: 20px;
-                right: 20px;
-                background: ${type === 'success' ? '#28a745' : type === 'error' ? '#dc3545' : '#007bff'};
-                color: white;
-                padding: 15px 25px;
-                border-radius: 8px;
-                box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-                z-index: 10000;
-                font-size: 14px;
-                max-width: 300px;
-                animation: slideIn 0.3s ease-out;
-            `;
-            
-            document.body.appendChild(notification);
-            
-            setTimeout(() => {
-                notification.style.animation = 'slideOut 0.3s ease-out';
-                setTimeout(() => notification.remove(), 300);
-            }, 3000);
-        }
-        
-        // Add animation styles
-        const style = document.createElement('style');
-        style.textContent = `
-            @keyframes slideIn {
-                from { transform: translateX(400px); opacity: 0; }
-                to { transform: translateX(0); opacity: 1; }
-            }
-            @keyframes slideOut {
-                from { transform: translateX(0); opacity: 1; }
-                to { transform: translateX(400px); opacity: 0; }
-            }
-        `;
-        document.head.appendChild(style);
         
         // ============================================================
         // GOOGLE CALENDAR INTEGRATION
@@ -1555,7 +1512,7 @@
             
             const propertyId = document.getElementById('resultPropertyId').textContent;
             const confirm = window.confirm(
-                'Add ' + calculatedDates.length + ' calendar events for:\n\n' + propertyId + '\n\n' +
+                `Add ${calculatedDates.length} calendar events for:\n\n${propertyId}\n\n` +
                 'Events will be created as all-day events marked as "free time".\n\n' +
                 'Click OK to proceed with Google Calendar authorization.'
             );
@@ -1586,7 +1543,7 @@
                     const dateStr = item.date.toISOString().split('T')[0];
                     
                     const event = {
-                        summary: propertyId + ' - ' + item.label,
+                        summary: `${propertyId} - ${item.label}`,
                         description: description,
                         start: {
                             date: dateStr,
@@ -1618,8 +1575,8 @@
             }
             
             if (successCount > 0) {
-                alert('✅ Successfully added ' + successCount + ' event(s) to your Google Calendar!\n\n' +
-                      (failCount > 0 ? '⚠️ ' + failCount + ' event(s) failed to create.' : '') +
+                alert(`✅ Successfully added ${successCount} event(s) to your Google Calendar!\n\n` +
+                      (failCount > 0 ? `⚠️ ${failCount} event(s) failed to create.` : '') +
                       '\n\nCheck your calendar for the new events.');
             } else {
                 alert('❌ Failed to create calendar events. Please try again.');
